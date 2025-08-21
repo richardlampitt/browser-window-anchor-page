@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Anchor Page</title>
+  <script id="purify" src="purify.js"></script>
+  <script id="marked" src="marked.js"></script>
+  <script id="main">
+    // /////////////////////////////////////////////////////////////////////////////
+    // region Configuration
+
+    // @formatter:off
+    // Start Editing Here - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    // ====================================================================
+    // region Content Details
+
+    /**
+     * Add the details of your projects / dashboards / collections of pages and so forth here. The keys shall be
+     *  used for a `?content=key` parameter in the URL.
+     *
+     * @type {{"item-name-without-spaces": {markdown: string, title: string}}}
+     */
+    let $content_details = {
+      // ----------------------------------------------------------
+      // region Dashboard
+
+      'dashboard': {
+        title: 'Work Dashboard',
+        markdown: /* language=markdown */ `
+## Sub Heading 1
+- [Link 1](https://example.com)
+- [Link 2](https://example.com)
+  - [Link 2.1](https://example.com)
+  - [Link 2.2](https://example.com)
+  - [Link 2.3](https://example.com)
+  - [Link 2.4](https://example.com)
+
+## Sub Heading 2
+- [Link 3](https://example.com)
+- [Link 4](https://example.com)
+- [Link 5](https://example.com)
+          `,
+      },
+
+      // endregion Dashboard
+      // ----------------------------------------------------------
+
+      // ----------------------------------------------------------
+      // region Updates
+
+      'backdrop': {
+        title: 'Backdrop Updates',
+        markdown: /* language=markdown */ `
+## Sub Heading 1
+- [Link 1](https://example.com)
+- [Link 2](https://example.com)
+  - [Link 2.1](https://example.com)
+  - [Link 2.2](https://example.com)
+  - [Link 2.3](https://example.com)
+  - [Link 2.4](https://example.com)
+
+## Sub Heading 2
+- [Link 3](https://example.com)
+- [Link 4](https://example.com)
+- [Link 5](https://example.com)
+          `,
+      },
+
+      // ----------------------------------------------------------
+
+      'wordpress': {
+        title: 'WordPress Updates',
+        markdown: /* language=markdown */ `
+## Sub Heading 1
+- [Link 1](https://example.com)
+- [Link 2](https://example.com)
+  - [Link 2.1](https://example.com)
+  - [Link 2.2](https://example.com)
+  - [Link 2.3](https://example.com)
+  - [Link 2.4](https://example.com)
+
+## Sub Heading 2
+- [Link 3](https://example.com)
+- [Link 4](https://example.com)
+- [Link 5](https://example.com)
+          `,
+      },
+
+      // endregion Updates
+      // ----------------------------------------------------------
+
+      // ----------------------------------------------------------
+      // region Projects
+
+      'project1': {
+        title: 'Exciting Project!',
+        markdown: /* language=markdown */ `
+## Sub Heading 1
+- [Link 1](https://example.com)
+- [Link 2](https://example.com)
+  - [Link 2.1](https://example.com)
+  - [Link 2.2](https://example.com)
+  - [Link 2.3](https://example.com)
+  - [Link 2.4](https://example.com)
+
+## Sub Heading 2
+- [Link 3](https://example.com)
+- [Link 4](https://example.com)
+- [Link 5](https://example.com)
+
+\`\`\`php
+  $example = "Example code snippet, showing the escaping";
+\`\`\`
+          `
+      },
+
+      'project2': {
+        title: 'Boring Project',
+        markdown: /* language=markdown */ `
+## Sub Heading 1
+- Oh no a boring project! :(
+          `
+      },
+
+      // endregion Projects
+      // ----------------------------------------------------------
+    };
+
+    // endregion Content Details
+    // ====================================================================
+
+    // ====================================================================
+    // region Assets
+
+    /**
+     * An array of objects to pull in local font files from elsewhere on your computer.
+     *
+     * Recommended site for downloading freely available fonts from Google: https://gwfh.mranftl.com/
+     * Rename `*-regular` to `*-400` and `*-italic` to `*-400italic` for best results.
+     *
+     * @property {string}   $font.family       - The name of the font family.
+     * @property {string}   $font.filenamebase - The remaining path to the font file(s).
+     * @property {string}   $font.format       - The file format of the font file(s). Only supports (and only needs)
+     *                                            one format. Mixing different formats will need a separate entry.
+     * @property {boolean}  $font.italic       - Add entries for italic font styles, or not.
+     * @property {number[]} $font.weights      - An array of font weights to load in.
+     *
+     * @example
+     * ```
+     * let _fonts = [
+     *   { family: 'Roboto',      filenamebase: 'roboto/roboto-v47-latin_latin-ext-',           format: 'woff2', italic: true,  weights: [ 300, 400, 600 ], },
+     *   { family: 'Roboto Mono', filenamebase: 'roboto-mono/roboto-mono-v22-latin-ext_latin-', format: 'woff2', italic: false, weights: [ 400, 600 ], },
+     * ]
+     * ```
+     *
+     * @type {[{family: string, filenamebase: string, format: string, italic: boolean, weights: number[]}]}
+     *
+     * @private
+     */
+    const _fonts = [
+      // @formatter:off
+      { family: 'Roboto',      filenamebase: 'roboto/roboto-v47-latin_latin-ext-',           format: 'woff2', italic: true,  weights: [ 300, 400, 600 ], },
+      { family: 'Roboto Mono', filenamebase: 'roboto-mono/roboto-mono-v22-latin-ext_latin-', format: 'woff2', italic: false, weights: [ 400, 600 ], },
+      // @formatter:on
+    ];
+
+    /**
+     * The path to your fonts. This can be relative or absolute. This value is prepended to the filenamebase from
+     *  the objects in the _fonts array. No need for a trailing slash.
+     *
+     * @type {string}
+     *
+     * @example
+     * ```
+     * let _font_dir = `C:/wamp64/www/.fonts`;
+     * ```
+     *
+     * @private
+     */
+    const _font_dir = `C:/wamp64/www/.fonts`;
+
+    // endregion Assets
+    // ====================================================================
+
+    // ====================================================================
+    // region Warning Messages
+
+    /**
+     * Warning strings used for "error" pages. These don't strictly need to be edited, but are here if required for
+     *  translation or taste.
+     *
+     * @type {{available_contents: string, missing: string, fallback: string}}
+     */
+    let $warnings = {
+      // The intro for selecting one of the pre-defined objects above:
+      available_contents: `Select one of the available contents:`,
+
+      // Displayed when attempting to access content that doesn't have a defined content parameter key:
+      fallback: {
+        title   : 'Content Parameter Missing',
+        markdown: `The \`content\` requested does not exist.\n\n`,
+      },
+
+      // Displayed if the parameter key is missing entirely:
+      missing: {
+        title   : 'No Matching Content',
+        markdown: `Edit the URL of this page to include a \`content\` parameter, or `, // no linebreaks
+      },
+    };
+
+    // endregion Warning Messages
+    // ====================================================================
+
+    // Finish Editing Here - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // @formatter:on
+
+    // endregion Configuration
+    // /////////////////////////////////////////////////////////////////////////////
+
+    window.addEventListener('DOMContentLoaded', () => {
+      let
+        $parameters,
+        _content_locations,
+        $loaded_content_object;
+
+      // /////////////////////////////////////////////////////////////////////////////
+      // region Content Fallbacks
+
+      // @formatter:off
+      $content_details['fallback'] = {title : `${$warnings.fallback.title}`, markdown: /* language=markdown */ `${$warnings.fallback.markdown}${$warnings.available_contents}`,};
+      $content_details['missing']  = {title : `${$warnings.missing.title}`, markdown: /* language=markdown */ `${$warnings.missing.markdown}${$warnings.available_contents}`,};
+      // @formatter:on
+      Object.entries($content_details).forEach(( [ key, $value ] ) => {
+        [ 'fallback', 'missing' ].forEach(( _key ) => {
+          let _current = (key === _key ? ` <small>(currently viewing)</small>` : '');
+          // @formatter:off
+          $content_details[_key].markdown = /* language=markdown */
+            `${$content_details[_key].markdown}\n- [${$value.title}](\?content\=${key})${_current}`;
+          // @formatter:on
+        });
+      });
+
+      // endregion
+      // /////////////////////////////////////////////////////////////////////////////
+
+      // /////////////////////////////////////////////////////////////////////////////
+      // region Content Population
+
+      $parameters = new URLSearchParams(window.location.search);
+
+      // Load the content object from the content parameter:
+      $loaded_content_object =
+        ($parameters.get('content') === null) ? // is it even present?
+        $content_details['missing'] : // no, display notice
+        (
+          ($content_details[$parameters.get('content')]) ? // does it exist?
+          $content_details[$parameters.get('content')] : // yes, load
+          $content_details['fallback'] // no, display notice
+        )
+      ;
+
+      // map content to locations in DOM:
+      _content_locations = [
+        // @formatter:off
+        { selector: 'title'         , content: $loaded_content_object.title, },
+        { selector: 'h1'            , content: $loaded_content_object.title, },
+        { selector: 'summary'       , content: $loaded_content_object.title, },
+        { selector: 'details > pre' , content: $loaded_content_object.markdown, },
+        { selector: 'article'       , content: DOMPurify.sanitize(marked.parse($loaded_content_object.markdown)), }
+        // @formatter:on
+      ];
+
+      // update the DOM with the mapped content:
+      _content_locations.forEach(( $location ) => {
+        let _c = $location.content;
+        if ( $location.selector === 'title' ) {
+          window.title = _c;
+        }
+        document.querySelector($location.selector).innerHTML = _c;
+      });
+
+      // Add target to links
+      document.querySelectorAll('a[href*="http"]').forEach(( element ) => {
+        element.setAttribute('target', '_blank');
+      });
+
+      // endregion Content Population
+      // /////////////////////////////////////////////////////////////////////////////
+
+      // /////////////////////////////////////////////////////////////////////////////
+      // region CSS Fonts
+
+
+      _fonts.forEach(( $font ) => {
+        // determine if italics are needed:
+        let _font_styles = [ 'normal' ];
+        if ( $font.italic === true ) {
+          _font_styles.push('italic');
+        }
+
+        $font.weights.forEach(( _font_weight ) => {
+          _font_styles.forEach(( _font_style ) => {
+            // compile @font-face CSS
+            // @formatter:off
+            let _font_face = /* language=css */ `
+@font-face {
+  src: local(${$font.family}), url("file:///${_font_dir}/${$font.filenamebase}${_font_weight}.${$font.format}") format('${$font.format}');
+  font-weight: ${_font_weight}; font-family: '${$font.family}'; font-style: ${_font_style}; font-display: swap;
+}`;
+            // @formatter:on
+            document.querySelector('#fonts').innerHTML = document.querySelector('#fonts').innerHTML + _font_face;
+          });
+        });
+      });
+
+      // endregion
+      // /////////////////////////////////////////////////////////////////////////////
+    });
+  </script>
+  <style id='fonts'></style>
+  <style id='styles'>
+    :root {
+      color-scheme: light dark;
+      --u--base-shade--light: #fefefeff;
+      --u--base-shade--dark: #343434ff;
+      --u--base-shade--link: #1078bc;
+
+      --u--color--body-background: light-dark(var(--u--base-shade--light), var(--u--base-shade--dark));
+      --u--color--body-text: light-dark(var(--u--base-shade--dark), var(--u--base-shade--light));
+
+      --u--color--accent: color-mix(in srgb, var(--u--color--body-text) 10%, transparent 100%);
+      --u--color--code-background: color-mix(in srgb, var(--u--color--body-text) 15%, transparent 100%);
+
+      --u--color--link-base: light-dark(var(--u--base-shade--link), color-mix(in srgb, var(--u--base-shade--link), var(--u--base-shade--light)));
+      --u--color--link-hover: light-dark(color-mix(in srgb, var(--u--base-shade--link) 100%, #fefefeff 20%), color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 50%));
+
+      --u--gutter: 2rem;
+      --u--font-family--body: "Roboto";
+      --u--font-family--monospace: "Roboto Mono";
+    }
+
+    *,
+    ::after,
+    ::before {
+      box-sizing: border-box;
+      grid-auto-columns: minmax(0, auto);
+      grid-auto-rows: minmax(0, auto);
+    }
+
+    html, body {
+      font-size: 16px !important;
+    }
+
+    body {
+      --grid-gutter: minmax(var(--u--gutter), 1fr);
+      display: grid;
+      grid-template-columns: var(--grid-gutter) minmax(auto, clamp(20rem, 80vw, 75rem)) var(--grid-gutter);
+      grid-template-rows: var(--u--gutter) minmax(20rem, auto) var(--grid-gutter);
+      grid-template-areas: " . . . " " . content . " " . . . ";
+      min-height: 99vh;
+      background: var(--u--color--body-background);
+      color: var(--u--color--body-text);
+      line-height: 1.6;
+      font-family: var(--u--font-family--body), sans-serif;
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      grid-area: content;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin-block: max(2rem, 1em) 1rem;
+    }
+
+    h1 {
+      font-size: max(2rem, 7.5vh);
+    }
+
+    p {
+      margin-block: 0 1rem;
+    }
+
+    a,
+    summary {
+      &, &:visited {
+        color: var(--u--color--link-base);
+      }
+
+      &:hover,
+      &:focus,
+      &:focus-visible {
+        color: var(--u--color--link-hover);
+      }
+    }
+
+    code {
+      background-color: var(--u--color--code-background);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding-inline: 0.25em;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      font-family: var(--u--font-family--monospace), monospace;
+      font-size: 0.9325em;
+
+      :not(summary) > & {
+        background-color: var(--u--color--accent);
+      }
+    }
+
+    details {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      margin-block: 1rem;
+      background-color: var(--u--color--accent);
+      border: 1px solid var(--u--color--accent);
+
+      & summary {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        gap: 0.5em;
+        justify-content: start;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      & summary::after {
+        content: "Raw Markdown";
+        display: flex;
+        order: -5;
+      }
+
+      & summary::before {
+        --size: 1em;
+        display: flex;
+        order: -10;
+        width: var(--size);
+        height: var(--size);
+        font-family: var(--u--font-family--monospace), monospace;
+        color: color-mix(in srgb, var(--u--color--body-text) 100%, var(--u--color--body-background) 100%);
+      }
+
+      &:not([open]) summary::before {
+        content: "↳";
+      }
+
+      &[open] summary::before {
+        content: "↴";
+      }
+
+      :is(footer) & summary {
+        color: color-mix(in srgb, var(--u--color--body-text) 100%, var(--u--color--body-background) 100%);
+
+        &::after {
+          color: var(--u--color--link-base);
+        }
+
+        &:hover,
+        &:focus,
+        &:focus-visible {
+          color: color-mix(in srgb, var(--u--color--body-text) 100%, var(--u--color--body-background) 100%);
+
+          &::after {
+            color: var(--u--color--link-hover);
+          }
+        }
+      }
+
+      & > :not(summary) {
+        background-color: var(--u--color--body-background);
+        padding: 0 1rem 1rem;
+      }
+
+      & > :nth-child(2) {
+        margin-block-start: 0;
+        padding-block-start: 1rem;
+      }
+
+      & > :last-child {
+        margin-block-end: 0;
+      }
+    }
+
+    /* layout */
+    :where(main) > :where(section) {
+      & > header,
+      & > main,
+      & > footer {
+        & > :first-child {
+          margin-block-start: 0rem;
+        }
+      }
+
+      & > footer {
+        font-size: 0.75rem;
+        padding-block-start: 4rem;
+      }
+    }
+
+  </style>
+</head>
+<body>
+<main>
+  <section>
+    <header>
+      <h1></h1>
+    </header>
+    <article></article>
+    <footer>
+      <details>
+        <summary></summary>
+        <pre></pre>
+      </details>
+    </footer>
+  </section>
+</main>
+</body>
+</html>

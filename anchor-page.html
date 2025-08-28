@@ -9,6 +9,37 @@
   <script id="marked" src="marked.js"></script>
   <script id="config" src="anchor.js"></script>
   <script id="main">
+
+    function wrap_elements_after_heading( heading ) {
+      // Get the level of the current heading
+      const _heading_level = parseInt(heading.tagName.charAt(1));
+
+      // Create a wrapper element
+      const $wrapper = document.createElement('section');
+
+      // Start wrapping elements
+      let $next_element = heading.nextElementSibling;
+
+      while ( $next_element && !is_heading_same_or_higher($next_element, _heading_level) ) {
+        const nextSibling = $next_element.nextElementSibling;
+        $wrapper.appendChild($next_element);
+        $next_element = nextSibling;
+      }
+
+      // Insert the wrapper after the heading
+      heading.parentNode.insertBefore($wrapper, $next_element);
+      $wrapper.insertBefore(heading, $wrapper.firstChild);
+    }
+
+    // Helper function to check if the next element is a heading of the same or higher level
+    function is_heading_same_or_higher( element, level ) {
+      if ( element.tagName.startsWith('H') ) {
+        const _element_level = parseInt(element.tagName.charAt(1));
+        return _element_level <= level;
+      }
+      return false;
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       let
         $parameters,
@@ -38,6 +69,9 @@
       // /////////////////////////////////////////////////////////////////////////////
       // region Content Population
 
+      // ---------------------------------------------------------------------
+      // region Determine Content
+
       $parameters = new URLSearchParams(window.location.search);
 
       // Load the content object from the content parameter:
@@ -50,6 +84,12 @@
           $content_details['fallback'] // no, display notice
         )
       ;
+
+      // endregion Determine Content
+      // ---------------------------------------------------------------------
+
+      // ---------------------------------------------------------------------
+      // region Parse Content
 
       // Remove zero-width characters: https://github.com/markedjs/marked/issues/2139
       $loaded_content_object.markdown =
@@ -81,6 +121,12 @@
         document.querySelector($location.selector).innerHTML = _c;
       });
 
+      // endregion Parse Content
+      // ---------------------------------------------------------------------
+
+      // ---------------------------------------------------------------------
+      // region Adjust Content
+
       // Add target to links
       document.querySelectorAll('a[href*="http"]').forEach(( element ) => {
         element.setAttribute('target', '_blank');
@@ -93,6 +139,17 @@
       ) {
         document.querySelector('article').style.display = 'grid';
       }
+
+      // Wrap content between heading tags in a section
+      const _arr = [ 2, 3, 4, 5, 6 ];
+      _arr.forEach(( _level ) => {
+        document.querySelectorAll(`h${_level}`).forEach(function ( element ) {
+          wrap_elements_after_heading(element);
+        });
+      });
+
+      // endregion Adjust Content
+      // ---------------------------------------------------------------------
 
       // endregion Content Population
       // /////////////////////////////////////////////////////////////////////////////
@@ -141,7 +198,18 @@
       --u--color--code-background: color-mix(in srgb, var(--u--color--body-text) 15%, transparent 100%);
 
       --u--color--link-base: light-dark(var(--u--base-shade--link), color-mix(in srgb, var(--u--base-shade--link), var(--u--base-shade--light)));
-      --u--color--link-hover: light-dark(color-mix(in srgb, var(--u--base-shade--link) 100%, #fefefeff 20%), color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 50%));
+      --u--color--link-hover: light-dark(
+        color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 20%),
+        color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 50%)
+      );
+      --u--color--btn-bg-base: light-dark(
+        color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 15%),
+        color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 30%)
+      );
+      --u--color--btn-bg-hover: light-dark(
+        color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 7%),
+        color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 17%)
+      );
 
       --u--gutter: 2rem;
       --u--font-family--body: "Roboto";
@@ -205,57 +273,76 @@
       grid-area: content;
     }
 
-    article {
+    article[style*="display"][style*="grid"] {
       /*display: grid;*/
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: var(--u--gutter);
+      row-gap: calc(var(--u--gutter) / 2);
+      grid-auto-flow: dense;
 
-      & > h1,
-      & > h2,
-      & > h3,
-      & > h4,
-      & > h5,
-      & > h6 {
+      & > :not(section) {
         /* default behaviour - span the page as normal: */
-        grid-column: 1/5;
-
-        &:has(+ ul),
-        &:has(+ ol) {
-          grid-column: unset;
-          &:nth-child(-n+4) {
-            grid-row: 2/3;
-          }
-          &:nth-child(-n+8) {
-            grid-row: 4/5;
-          }
-          &:nth-child(-n+12) {
-            grid-row: 6/7;
-          }
-          &:nth-child(n+13) {
-            grid-column: 1/5;
-          }
-        }
-
-        & + ol,
-        & + ul {
-          grid-column: unset;
-          &:nth-child(-n+4) {
-            grid-row: 3/4;
-          }
-          &:nth-child(-n+8) {
-            grid-row: 5/6;
-          }
-          &:nth-child(-n+12) {
-            grid-row: 7/8;
-          }
-          &:nth-child(n+13) {
-            grid-column: 1/5;
-          }
-        }
+        grid-column: 1/-1;
       }
-      & ol,
-      & ul {
-        /* default behaviour - span the page as normal: */
-        grid-column: 1/5;
+
+      & > section {
+        --padding: calc(var(--u--gutter) / 3);
+        grid-column: auto;
+        margin-block: 0;
+        min-height: 10rem;
+        padding: var(--padding);
+        border: 1px solid #88888845;
+        border-radius: var(--padding);
+
+        & > h2,
+        & > h3,
+        & > h4,
+        & > h5,
+        & > h6 {
+          margin-block-start: 0;
+        }
+
+        & ol,
+        & ul {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          grid-column: unset;
+          gap: calc(var(--u--gutter) / 3);
+          margin-block-start: 0;
+          padding-inline: 0;
+        }
+
+        & ol {
+          list-style-position: inside;
+        }
+
+        & ul {
+          list-style: none;
+        }
+
+        & a {
+          border-radius: 0.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding-block: 0.25rem;
+          padding-inline: 0.5rem;
+          text-decoration-color: color-mix(in srgb, currentcolor 80%, transparent 100%);
+
+          &,
+          &:visited {
+            background-color: var(--u--color--btn-bg-base);
+            color: var(--u--color--body-text);
+          }
+
+          &:hover,
+          &:focus,
+          &:focus-visible {
+            background-color: var(--u--color--btn-bg-hover);
+            color: var(--u--color--body-text);
+          }
+        }
       }
     }
 

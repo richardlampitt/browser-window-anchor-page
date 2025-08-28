@@ -29,6 +29,7 @@
 
       'dashboard': {
         title: 'Work Dashboard',
+        icon: '',
         markdown: /* language=markdown */ `
 ## Sub Heading 1
 - [Link 1](https://example.com)
@@ -139,6 +140,38 @@
     // ====================================================================
     // region Assets
 
+    // ----------------------------------------------------------
+    // region Icon
+
+    /**
+     * A fallback icon, if needed. Should be a path to an image file.
+     *
+     * @type {string}
+     * @private
+     */
+    const _icon_fallback = 'icon-fallback.png';
+
+    /**
+     * The path to the icon fallback. This can be relative or absolute. This value is prepended to the _icon_fallback.
+     * No need for a trailing slash.
+     *
+     * @type {string}
+     *
+     * @example
+     * ```
+     * let _font_dir = `C:/wamp64/www/.fonts`;
+     * ```
+     *
+     * @private
+     */
+    const _icon_fallback_dir = '';
+
+    // endregion Icon
+    // ----------------------------------------------------------
+
+    // ----------------------------------------------------------
+    // region Fonts
+
     /**
      * An array of objects to pull in local font files from elsewhere on your computer.
      *
@@ -185,6 +218,9 @@
      * @private
      */
     const _font_dir = `C:/wamp64/www/.fonts`;
+
+    // endregion Fonts
+    // ----------------------------------------------------------
 
     // endregion Assets
     // ====================================================================

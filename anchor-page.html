@@ -53,7 +53,7 @@
 
       'backdrop': {
         title: 'Backdrop Updates',
-        img: '',
+        icon: '',
         markdown: /* language=markdown */ `
 ## Sub Heading 1
 - [Link 1](https://example.com)
@@ -74,7 +74,7 @@
 
       'wordpress': {
         title: 'WordPress Updates',
-        img: '',
+        icon: '',
         markdown: /* language=markdown */ `
 ## Sub Heading 1
 - [Link 1](https://example.com)
@@ -99,7 +99,7 @@
 
       'project1': {
         title: 'Exciting Project!',
-        img: '',
+        icon: '',
         markdown: /* language=markdown */ `
 ## Sub Heading 1
 - [Link 1](https://example.com)
@@ -122,7 +122,7 @@
 
       'project2': {
         title: 'Boring Project',
-        img: '',
+        icon: '',
         markdown: /* language=markdown */ `
 ## Sub Heading 1
 - Oh no a boring project! :(
@@ -271,6 +271,7 @@
         // @formatter:off
         { selector: 'title'         , content: $loaded_content_object.title, },
         { selector: 'h1'            , content: $loaded_content_object.title, },
+        { selector: 'header > div'  , content: $loaded_content_object.icon, },
         { selector: 'summary'       , content: $loaded_content_object.title, },
         { selector: 'details > pre' , content: $loaded_content_object.markdown, },
         { selector: 'article'       , content: DOMPurify.sanitize(marked.parse($loaded_content_object.markdown)), }
@@ -370,6 +371,28 @@
       font-family: var(--u--font-family--body), sans-serif;
       font-weight: 300;
       font-style: normal;
+    }
+
+    header {
+      display: flex;
+      align-items: stretch;
+      justify-content: start;
+
+      & div {
+        --size: 1em; /* note(rl): Deliberate `em` use - size should match parent font size. */
+
+        &,
+        & img {
+          height: var(--size);
+          width: var(--size);
+          aspect-ratio: 1;
+        }
+
+        & img {
+          object-fit: cover;
+          object-position: center;
+        }
+      }
     }
 
     main {

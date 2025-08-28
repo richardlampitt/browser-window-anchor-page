@@ -302,12 +302,14 @@
         )
       ;
 
+      $loaded_content_object.icon = ( $loaded_content_object.icon ) ? $loaded_content_object.icon : `${_icon_fallback_dir}/${_icon_fallback}`;
+
       // map content to locations in DOM:
       _content_locations = [
         // @formatter:off
         { selector: 'title'         , content: $loaded_content_object.title, },
         { selector: 'h1'            , content: $loaded_content_object.title, },
-        { selector: 'header > div'  , content: $loaded_content_object.icon, },
+        { selector: 'header > div'  , content: `![${$loaded_content_object.title}](${$loaded_content_object.icon} "${$loaded_content_object.title}")`, },
         { selector: 'summary'       , content: $loaded_content_object.title, },
         { selector: 'details > pre' , content: $loaded_content_object.markdown, },
         { selector: 'article'       , content: DOMPurify.sanitize(marked.parse($loaded_content_object.markdown)), }

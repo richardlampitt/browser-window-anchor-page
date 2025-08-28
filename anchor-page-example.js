@@ -138,87 +138,96 @@ let $content_details = {
 // ====================================================================
 // region Assets
 
-// ----------------------------------------------------------
-// region Icon
+const $assets = {
+  // ----------------------------------------------------------
+  // region Icon
 
-/**
- * A fallback icon, if needed. Should be a path to an image file.
- *
- * @type {string}
- * @private
- */
-const _icon_fallback = 'icon-fallback.png';
+  /**
+   * A fallback icon, if needed. Should be a path to an image file.
+   *
+   * @type {string}
+   * @private
+   */
+  icon_fallback: 'fallback-icon.png',
 
-/**
- * The path to the icon fallback. This can be relative or absolute. This value is prepended to the _icon_fallback.
- * No need for a trailing slash.
- *
- * @type {string}
- *
- * @example
- * ```
- * let _font_dir = `C:/wamp64/www/.fonts`;
- * ```
- *
- * @private
- */
-const _icon_fallback_dir = '';
+  /**
+   * The path to the icon fallback. Optional. This can be relative or absolute. This value is prepended to
+   * the _icon_fallback. No need for a trailing slash.
+   *
+   * @type {string}
+   *
+   * @example
+   * ```
+   * let _font_dir = `C:/wamp64/www/.fonts`;
+   * ```
+   *
+   * @private
+   */
+  icon_fallback_dir: '',
 
-// endregion Icon
-// ----------------------------------------------------------
+  // endregion Icon
+  // ----------------------------------------------------------
 
-// ----------------------------------------------------------
-// region Fonts
+  // ----------------------------------------------------------
+  // region Fonts
 
-/**
- * An array of objects to pull in local font files from elsewhere on your computer.
- *
- * Recommended site for downloading freely available fonts from Google: https://gwfh.mranftl.com/
- * Rename `*-regular` to `*-400` and `*-italic` to `*-400italic` for best results.
- *
- * @property {string}   $font.family       - The name of the font family.
- * @property {string}   $font.filenamebase - The remaining path to the font file(s).
- * @property {string}   $font.format       - The file format of the font file(s). Only supports (and only needs)
- *                                            one format. Mixing different formats will need a separate entry.
- * @property {boolean}  $font.italic       - Add entries for italic font styles, or not.
- * @property {number[]} $font.weights      - An array of font weights to load in.
- *
- * @example
- * ```
- * let _fonts = [
- *   { family: 'Roboto',      filenamebase: 'roboto/roboto-v47-latin_latin-ext-',           format: 'woff2', italic: true,  weights: [ 300, 400, 600 ], },
- *   { family: 'Roboto Mono', filenamebase: 'roboto-mono/roboto-mono-v22-latin-ext_latin-', format: 'woff2', italic: false, weights: [ 400, 600 ], },
- * ]
- * ```
- *
- * @type {[{family: string, filenamebase: string, format: string, italic: boolean, weights: number[]}]}
- *
- * @private
- */
-const _fonts = [
-  // @formatter:off
-  { family: 'Roboto',      filenamebase: 'roboto/roboto-v47-latin_latin-ext-',           format: 'woff2', italic: true,  weights: [ 300, 400, 600 ], },
-  { family: 'Roboto Mono', filenamebase: 'roboto-mono/roboto-mono-v22-latin-ext_latin-', format: 'woff2', italic: false, weights: [ 400, 600 ], },
-  // @formatter:on
-];
+  /**
+   * An array of objects to pull in local font files from elsewhere on your computer.
+   *
+   * Recommended site for downloading freely available fonts from Google: https://gwfh.mranftl.com/
+   * Rename `*-regular` to `*-400` and `*-italic` to `*-400italic` for best results.
+   *
+   * @property {string}   $font.family       - The name of the font family.
+   * @property {string}   $font.filenamebase - The remaining path to the font file(s).
+   * @property {string}   $font.format       - The file format of the font file(s). Only supports (and only needs)
+   *                                            one format. Mixing different formats will need a separate entry.
+   * @property {boolean}  $font.italic       - Add entries for italic font styles, or not.
+   * @property {number[]} $font.weights      - An array of font weights to load in.
+   *
+   * @example
+   * ```
+   * let _fonts = [
+   *   { family: 'Roboto',      filenamebase: 'roboto/roboto-v47-latin_latin-ext-',           format: 'woff2', italic: true,  weights: [ 300, 400, 600 ], },
+   *   { family: 'Roboto Mono', filenamebase: 'roboto-mono/roboto-mono-v22-latin-ext_latin-', format: 'woff2', italic: false, weights: [ 400, 600 ], },
+   * ]
+   * ```
+   *
+   * @type {[{family: string, filenamebase: string, format: string, italic: boolean, weights: number[]}]}
+   *
+   * @private
+   */
+  fonts: [
+    // @formatter:off
+    { family: 'Roboto',      filenamebase: 'roboto/roboto-v47-latin_latin-ext-',           format: 'woff2', italic: true,  weights: [ 300, 400, 600 ], },
+    { family: 'Roboto Mono', filenamebase: 'roboto-mono/roboto-mono-v22-latin-ext_latin-', format: 'woff2', italic: false, weights: [ 400, 600 ], },
+    // @formatter:on
+  ],
 
-/**
- * The path to your fonts. This can be relative or absolute. This value is prepended to the filenamebase from
- *  the objects in the _fonts array. No need for a trailing slash.
- *
- * @type {string}
- *
- * @example
- * ```
- * let _font_dir = `C:/wamp64/www/.fonts`;
- * ```
- *
- * @private
- */
-const _font_dir = `C:/wamp64/www/.fonts`;
+  /**
+   * The path to your fonts. This can be relative or absolute. This value is prepended to the filenamebase from
+   *  the objects in the _fonts array. No need for a trailing slash.
+   *
+   * @type {string}
+   *
+   * @example
+   * ```
+   * let _font_dir = `C:/wamp64/www/.fonts`;
+   * ```
+   *
+   * @private
+   */
+  font_dir: `C:/wamp64/www/.fonts`,
 
-// endregion Fonts
-// ----------------------------------------------------------
+  // endregion Fonts
+  // ----------------------------------------------------------
+};
+
+// compatibility constants:
+const
+  _icon_fallback     = $assets.icon_fallback,
+  _icon_fallback_dir = $assets.icon_fallback_dir,
+  _fonts             = $assets.fonts,
+  _font_dir          = $assets.font_dir;
 
 // endregion Assets
 // ====================================================================

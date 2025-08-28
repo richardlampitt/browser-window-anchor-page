@@ -254,6 +254,17 @@
     // endregion Warning Messages
     // ====================================================================
 
+    // ====================================================================
+    // region DOM Purify Config
+
+    const $dom_purify_config = {
+      ADD_TAGS: [ 'img' ],
+      ADD_ATTR: [ 'alt', 'src', 'width', 'height' ],
+    };
+
+    // endregion DOM Purify Config
+    // ====================================================================
+
     // Finish Editing Here - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // @formatter:on
 
@@ -302,17 +313,24 @@
         )
       ;
 
-      $loaded_content_object.icon = ( $loaded_content_object.icon ) ? $loaded_content_object.icon : `${_icon_fallback_dir}/${_icon_fallback}`;
+      // Remove zero-width characters: https://github.com/markedjs/marked/issues/2139
+      $loaded_content_object.markdown =
+        $loaded_content_object.markdown.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, '');
+
+      // Ensure an icon is available:
+      let _icon_fallback_path = (_icon_fallback_dir) ? `${_icon_fallback_dir}/${_icon_fallback}` : _icon_fallback;
+      $loaded_content_object.icon =
+        ($loaded_content_object.icon) ? $loaded_content_object.icon : _icon_fallback_path;
 
       // map content to locations in DOM:
       _content_locations = [
         // @formatter:off
         { selector: 'title'         , content: $loaded_content_object.title, },
         { selector: 'h1'            , content: $loaded_content_object.title, },
-        { selector: 'header > div'  , content: `![${$loaded_content_object.title}](${$loaded_content_object.icon} "${$loaded_content_object.title}")`, },
+        { selector: 'header > div'  , content: `\n <img src="${$loaded_content_object.icon}" alt="${$loaded_content_object.title}"/>`, },
         { selector: 'summary'       , content: $loaded_content_object.title, },
         { selector: 'details > pre' , content: $loaded_content_object.markdown, },
-        { selector: 'article'       , content: DOMPurify.sanitize(marked.parse($loaded_content_object.markdown)), }
+        { selector: 'article'       , content: DOMPurify.sanitize(marked.parse($loaded_content_object.markdown), $dom_purify_config), }
         // @formatter:on
       ];
 
@@ -415,6 +433,8 @@
       display: flex;
       align-items: stretch;
       justify-content: start;
+      flex-direction: row-reverse;
+      gap: clamp(0.5rem, 1vw, 2rem);
 
       & div {
         --size: 1em; /* note(rl): Deliberate `em` use - size should match parent font size. */
@@ -443,8 +463,10 @@
       margin-block: max(2rem, 1em) 1rem;
     }
 
-    h1 {
+    h1,
+    header > div {
       font-size: max(2rem, 7.5vh);
+      line-height: 1;
     }
 
     p {

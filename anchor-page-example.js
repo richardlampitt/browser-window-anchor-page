@@ -136,6 +136,23 @@ let $content_details = {
 // ====================================================================
 
 // ====================================================================
+// region Layout
+
+const $layout = {
+
+  /**
+   * Enable a grid layout for element (true), or just display as a plain document (false):
+   *
+   * @type {boolean}
+   * @private
+   */
+  grid: false,
+};
+
+// endregion Layout
+// ====================================================================
+
+// ====================================================================
 // region Assets
 
 const $assets = {
@@ -222,13 +239,6 @@ const $assets = {
   // ----------------------------------------------------------
 };
 
-// compatibility constants:
-const
-  _icon_fallback     = $assets.icon_fallback,
-  _icon_fallback_dir = $assets.icon_fallback_dir,
-  _fonts             = $assets.fonts,
-  _font_dir          = $assets.font_dir;
-
 // endregion Assets
 // ====================================================================
 
@@ -273,7 +283,12 @@ const $dom_purify_config = {
 // ====================================================================
 
 // Finish Editing Here - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// @formatter:on
+
+// compatibility constants:
+const _icon_fallback     = $assets.icon_fallback,
+      _icon_fallback_dir = $assets.icon_fallback_dir,
+      _fonts             = $assets.fonts,
+      _font_dir          = $assets.font_dir;
 
 // endregion Configuration
 // /////////////////////////////////////////////////////////////////////////////

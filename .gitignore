@@ -3,6 +3,7 @@
 !.gitattributes
 !.gitignore
 !anchor-page.html
+!anchor-page-example.js
 !marked.js
 !purify.js
 !fallback-icon.png

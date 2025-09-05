@@ -73,7 +73,7 @@ let $content_details = {
 
   'wordpress': {
     title: 'WordPress Updates',
-    icon: 'https://s.w.org/style/images/about/WordPress-logotype-wmark.png',
+    icon: 'https://s.w.org/style/images/about/WordPress-logotype-wmark-white.png',
     markdown: /* language=markdown */ `
 ## Sub Heading 1
 - [Link 1](https://example.com)

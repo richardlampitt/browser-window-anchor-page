@@ -103,22 +103,28 @@
       // map content to locations in DOM:
       _content_locations = [
         // @formatter:off
-        { selector: 'title'         , content: $loaded_content_object.title, },
-        { selector: 'h1'            , content: $loaded_content_object.title, },
-        { selector: 'header > div'  , content: `\n <img src="${$loaded_content_object.icon}" alt="${$loaded_content_object.title}"/>`, },
-        { selector: 'summary'       , content: $loaded_content_object.title, },
-        { selector: 'details > pre' , content: $loaded_content_object.markdown, },
-        { selector: 'article'       , content: DOMPurify.sanitize(marked.parse($loaded_content_object.markdown), $dom_purify_config), }
+        { selector: 'title'              , content: $loaded_content_object.title, },
+        { selector: 'h1'                 , content: $loaded_content_object.title, },
+        { selector: 'header > div'       , content: `\n <img src="${$loaded_content_object.icon}" alt="${$loaded_content_object.title}"/>`, },
+        { selector: 'summary'            , content: $loaded_content_object.title, },
+        { selector: 'details > pre'      , content: $loaded_content_object.markdown, },
+        { selector: 'details > textarea' , content: $loaded_content_object.markdown, },
+        { selector: 'article'            , content: DOMPurify.sanitize(marked.parse($loaded_content_object.markdown), $dom_purify_config), }
         // @formatter:on
       ];
 
       // update the DOM with the mapped content:
       _content_locations.forEach(( $location ) => {
-        let _c = $location.content;
+        let
+          _e,
+          _c = $location.content;
         if ( $location.selector === 'title' ) {
           window.title = _c;
         }
-        document.querySelector($location.selector).innerHTML = _c;
+        _e = document.querySelector($location.selector);
+        if ( _e ) {
+          _e.innerHTML = _c;
+        }
       });
 
       // endregion Parse Content
@@ -381,7 +387,7 @@
       padding-inline: 0.25em;
     }
 
-    pre {
+    pre, textarea {
       white-space: pre-wrap;
       font-family: var(--u--font-family--monospace), monospace;
       font-size: 0.9325em;
@@ -389,6 +395,16 @@
       :not(summary) > & {
         background-color: var(--u--color--accent);
       }
+    }
+
+    textarea {
+      width: 100%;
+      max-width: 100%;
+      min-width: 100%;
+      min-height: min(75dvh, 20rem);
+      max-height: 75dvh;
+      padding-block: 0.25rem;
+      padding-inline: 0.325rem;
     }
 
     details {
@@ -495,7 +511,7 @@
     <footer>
       <details>
         <summary></summary>
-        <pre></pre>
+        <textarea></textarea>
       </details>
     </footer>
   </section>

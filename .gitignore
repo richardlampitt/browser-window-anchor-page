@@ -4,6 +4,7 @@
 !.gitignore
 !anchor-page.html
 !anchor-page-example.js
+!anchor-content-example.js
 !marked.js
 !purify.js
 !fallback-icon.png

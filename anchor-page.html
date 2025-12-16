@@ -7,6 +7,16 @@
   <title>Anchor Page</title>
   <script id="purify" src="purify.js"></script>
   <script id="marked" src="marked.js"></script>
+  <script id="content-object">
+  /* holding object for content - allows multiple scripts to be added :*/
+  var $content_details = {};
+  </script>
+  <!-- content script(s) -->
+  <!-- ------------------------
+    -- Add as many content scripts as required here. See anchor-content-example.js for details
+    --------------------------- -->
+  <script id="content" src="content.js"></script>
+  <!-- /end content script(s) -->
   <script id="config" src="anchor.js"></script>
   <script id="main">
 

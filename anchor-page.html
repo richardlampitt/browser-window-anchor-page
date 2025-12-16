@@ -60,8 +60,10 @@
       // region Content Fallbacks
 
       // @formatter:off
-      $content_details['fallback'] = {title : `${$warnings.fallback.title}`, markdown: /* language=markdown */ `${$warnings.fallback.markdown}${$warnings.available_contents}`,};
-      $content_details['missing']  = {title : `${$warnings.missing.title}`, markdown: /* language=markdown */ `${$warnings.missing.markdown}${$warnings.available_contents}`,};
+      $content_details = Object.assign($content_details, {
+        'fallback' : { title : `${$warnings.fallback.title}` , markdown: /* language=markdown */ `${$warnings.fallback.markdown}${$warnings.available_contents}`, },
+        'missing'  : { title : `${$warnings.missing.title}`  , markdown: /* language=markdown */ `${$warnings.missing.markdown}${$warnings.available_contents}`, },
+      });
       // @formatter:on
       Object.entries($content_details).forEach(( [ key, $value ] ) => {
         [ 'fallback', 'missing' ].forEach(( _key ) => {

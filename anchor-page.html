@@ -8,15 +8,13 @@
   <script id="purify" src="purify.js"></script>
   <script id="marked" src="marked.js"></script>
   <script id="content-object">
-  /* holding object for content - allows multiple scripts to be added :*/
-  var $content_details = {};
+    /* holding object for content - allows multiple scripts to be added :*/
+    var $content_details = {};
   </script>
   <!-- content script(s) -->
-  <!-- ------------------------
-    -- Add as many content scripts as required here. See anchor-content-example.js for details
-    --------------------------- -->
   <script id="content" src="content.js"></script>
   <!-- /end content script(s) -->
+
   <script id="config" src="anchor.js"></script>
   <script id="main">
 
@@ -102,6 +100,18 @@
 
       // ---------------------------------------------------------------------
       // region Parse Content
+
+      // Add regular sections ready to the markdown for compiling
+      // if ( $loaded_content_object.sections !== "undefined" ) { // ensure the section exists.
+      // $loaded_content_object.sections.forEach( (section, index ) => {
+      //   if (
+      //     section.title !== "undefined" &&
+      //     section.markdown !== "undefined"
+      //   ) {
+
+      //   }
+      // });
+      // }
 
       // Remove zero-width characters: https://github.com/markedjs/marked/issues/2139
       $loaded_content_object.markdown =
@@ -205,21 +215,34 @@
   <style id='styles'>
     :root {
       color-scheme: light dark;
+      /* Colours: */
       --u--base-shade--light: #fefefeff;
       --u--base-shade--dark: #343434ff;
       --u--base-shade--link: #1078bc;
 
+      /* Colours - bg/text: */
       --u--color--body-background: light-dark(var(--u--base-shade--light), var(--u--base-shade--dark));
       --u--color--body-text: light-dark(var(--u--base-shade--dark), var(--u--base-shade--light));
 
+      /* Colours - other: */
       --u--color--accent: color-mix(in srgb, var(--u--color--body-text) 10%, transparent 100%);
       --u--color--code-background: color-mix(in srgb, var(--u--color--body-text) 15%, transparent 100%);
+      --u--color--section-border: #87878745;
 
-      --u--color--link-base: light-dark(var(--u--base-shade--link), color-mix(in srgb, var(--u--base-shade--link), var(--u--base-shade--light)));
+      /* Buttons: */
+      --u--color--link-base: light-dark(
+        var(--u--base-shade--link),
+        color-mix(in srgb, var(--u--base-shade--link), var(--u--base-shade--light))
+      );
       --u--color--link-hover: light-dark(
         color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 20%),
         color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 50%)
       );
+      --u--color--link-disabled: light-dark(
+        color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--color--body-background) 50%),
+        color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--color--body-background) 50%)
+      );
+
       --u--color--btn-bg-base: light-dark(
         color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 15%),
         color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 30%)
@@ -227,6 +250,10 @@
       --u--color--btn-bg-hover: light-dark(
         color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 7%),
         color-mix(in srgb, var(--u--base-shade--link) 100%, var(--u--base-shade--light) 17%)
+      );
+      --u--color--btn-bg-disabled: light-dark(
+        color-mix(in srgb, var(--u--base-shade--link) 25%, var(--u--color--body-background) 100%),
+        color-mix(in srgb, var(--u--base-shade--link) 25%, var(--u--color--body-background) 100%)
       );
 
       --u--gutter: 2rem;
@@ -309,7 +336,7 @@
         margin-block: 0;
         min-height: 10rem;
         padding: var(--padding);
-        border: 1px solid #88888845;
+        border: 1px solid var(--u--color--section-border, #88888845);
         border-radius: var(--padding);
 
         & > h2,
@@ -360,6 +387,13 @@
             background-color: var(--u--color--btn-bg-hover);
             color: var(--u--color--body-text);
           }
+
+          &:disabled,
+          &.disabled,
+          &[href=""] {
+            background-color: var(--u--color--btn-bg-disabled);
+            color: var(--u--color--body-text);
+          }
         }
       }
     }
@@ -380,7 +414,8 @@
 
     a,
     summary {
-      &, &:visited {
+      &,
+      &:visited {
         color: var(--u--color--link-base);
       }
 
@@ -388,6 +423,13 @@
       &:focus,
       &:focus-visible {
         color: var(--u--color--link-hover);
+      }
+
+      &[href=""],
+      &.disabled,
+      &:disabled {
+        color: var(--u--color--link-disabled);
+        cursor: not-allowed;
       }
     }
 

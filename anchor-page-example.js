@@ -135,12 +135,16 @@ let $warnings = {
   // Displayed when attempting to access content that doesn't have a defined content parameter key:
   fallback: {
     title   : 'Content Parameter Missing',
+    domain_base: '',
+    service_id: '',
     markdown: `The \`content\` requested does not exist.\n\n`,
   },
 
   // Displayed if the parameter key is missing entirely:
   missing: {
     title   : 'No Matching Content',
+    domain_base: '',
+    service_id: '',
     markdown: `Edit the URL of this page to include a \`content\` parameter, or `, // no linebreaks
   },
 };

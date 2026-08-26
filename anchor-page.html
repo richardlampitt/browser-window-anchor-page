@@ -23,20 +23,24 @@
       const _heading_level = parseInt(heading.tagName.charAt(1));
 
       // Create a wrapper element
-      const $wrapper = document.createElement('section');
+      let $wrapper = document.createElement('section');
+
 
       // Start wrapping elements
       let $next_element = heading.nextElementSibling;
 
       while ( $next_element && !is_heading_same_or_higher($next_element, _heading_level) ) {
         const nextSibling = $next_element.nextElementSibling;
-        $wrapper.appendChild($next_element);
+        $wrapper
+          .appendChild($next_element);
         $next_element = nextSibling;
       }
 
       // Insert the wrapper after the heading
-      heading.parentNode.insertBefore($wrapper, $next_element);
-      $wrapper.insertBefore(heading, $wrapper.firstChild);
+      heading.parentNode
+        .insertBefore($wrapper, $next_element);
+      $wrapper
+        .insertBefore(heading, $wrapper.firstChild);
     }
 
     // Helper function to check if the next element is a heading of the same or higher level
@@ -48,11 +52,20 @@
       return false;
     }
 
+    function populate_content_markup_from_definitions( content_details ) {
+
+    }
+
+    function escape_regex( string ) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       let
         $parameters,
         _content_locations,
-        $loaded_content_object;
+        $loaded_content_object,
+        _warning_messages = [];
 
       // /////////////////////////////////////////////////////////////////////////////
       // region Content Fallbacks
@@ -87,12 +100,12 @@
       // Load the content object from the content parameter:
       $loaded_content_object =
         ($parameters.get('content') === null) ? // is it even present?
-        $content_details['missing'] : // no, display notice
-        (
-          ($content_details[$parameters.get('content')]) ? // does it exist?
-          $content_details[$parameters.get('content')] : // yes, load
-          $content_details['fallback'] // no, display notice
-        )
+          $content_details['missing'] : // no, display notice
+          (
+            ($content_details[$parameters.get('content')]) ? // does it exist?
+              $content_details[$parameters.get('content')] : // yes, load
+              $content_details['fallback'] // no, display notice
+          )
       ;
 
       // endregion Determine Content
@@ -103,24 +116,53 @@
 
       // Add regular sections ready to the markdown for compiling
       // if ( $loaded_content_object.sections !== "undefined" ) { // ensure the section exists.
-      // $loaded_content_object.sections.forEach( (section, index ) => {
-      //   if (
-      //     section.title !== "undefined" &&
-      //     section.markdown !== "undefined"
-      //   ) {
-
-      //   }
-      // });
+      //   $loaded_content_object.sections.forEach( (section, index ) => {
+      //     if (
+      //       section.title !== "undefined" &&
+      //       section.markdown !== "undefined"
+      //     ) {
+      //
+      //     }
+      //   });
       // }
 
       // Remove zero-width characters: https://github.com/markedjs/marked/issues/2139
       $loaded_content_object.markdown =
         $loaded_content_object.markdown.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, '');
 
+      // Replace any text tokens:
+      Object.entries($loaded_content_object).forEach(function ( [ key, value ] ) {
+        if (
+          key !== 'markdown' // don't recursively replace the markdown key
+        ) {
+          const
+            _token_pattern = new RegExp(
+              `\\[\\[${escape_regex(key)}\\]\\]`,
+              'gi'
+            ),
+            _matches       = $loaded_content_object.markdown.match(_token_pattern);
+          if (
+            value !== '' // ensure there's something to actually replace with
+          ) {
+            // Inline function prevents special replacement sequences (such as `$&` or `$'`) in the value being interpreted:
+            $loaded_content_object.markdown =
+              $loaded_content_object.markdown.replace(_token_pattern, () => String(value));
+          }
+          else if ( _matches ) {
+            const
+              _times   = (_matches.length !== 1) ? 'times' : 'time',
+              _warning = `Replacement key \`${key}\` is empty. Found ${_matches.length} ${_times}`;
+            console.warn(_warning);
+            _warning_messages.push(_warning);
+          }
+        }
+      });
+
       // Ensure an icon is available:
       let _icon_fallback_path = (_icon_fallback_dir) ? `${_icon_fallback_dir}/${_icon_fallback}` : _icon_fallback;
       $loaded_content_object.icon =
         ($loaded_content_object.icon) ? $loaded_content_object.icon : _icon_fallback_path;
+
 
       // map content to locations in DOM:
       _content_locations = [
@@ -196,6 +238,7 @@
           _font_styles.forEach(( _font_style ) => {
             // compile @font-face CSS
             // @formatter:off
+            // noinspection CssUnknownTarget
             let _font_face = /* language=css */ `
               @font-face {
                 src: local(${$font.family}), url("file:///${_font_dir}/${$font.filenamebase}${_font_weight}.${$font.format}") format('${$font.format}');

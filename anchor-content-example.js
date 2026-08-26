@@ -100,6 +100,8 @@ Music
   'backdrop': {
     title: 'Backdrop Updates',
     icon: 'https://backdropcms.org/files/inline-images/Backdrop-Logo-Vertical_0.png',
+    domain_base: '',
+    service_id: '',
     markdown: /* language=markdown */ `
 ## Sub Heading 1
 - [Link 1](https://example.com)
@@ -121,6 +123,8 @@ Music
   'wordpress': {
     title: 'WordPress Updates',
     icon: 'https://s.w.org/style/images/about/WordPress-logotype-wmark-white.png',
+    domain_base: '',
+    service_id: '',
     markdown: /* language=markdown */ `
 ## Sub Heading 1
 - [Link 1](https://example.com)
@@ -146,6 +150,8 @@ Music
   'project1': {
     title: 'Exciting Project!',
     icon: '',
+    domain_base: '',
+    service_id: '',
     markdown: /* language=markdown */ `
 ## Sub Heading 1
 - [Link 1](https://example.com)
@@ -169,6 +175,8 @@ Music
   'project2': {
     title: 'Boring Project',
     icon: '',
+    domain_base: '',
+    service_id: '',
     markdown: /* language=markdown */ `
 ## Sub Heading 1
 - Oh no a boring project! :(
